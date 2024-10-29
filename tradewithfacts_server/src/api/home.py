@@ -4,10 +4,14 @@ from slowapi import Limiter
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
+from src.api.cot import cot
+
 
 home = FastAPI()
+home.include_router(cot, prefix="/cot")
 
 limiter = Limiter(key_func=get_remote_address)
+# noinspection PyUnresolvedReferences
 home.state.limiter = limiter
 
 home.add_exception_handler(

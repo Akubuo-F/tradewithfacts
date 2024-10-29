@@ -33,12 +33,8 @@ class Asset:
         return {
             "code": self.code,
             "name": self.name,
-            "asset_type": self.asset_type
+            "asset_type": self.asset_type.value
         }
-
-    @property
-    def code(self) -> str:
-        return self.code
 
     def __eq__(self, other: "Asset") -> bool:
         return self.code == other.code
