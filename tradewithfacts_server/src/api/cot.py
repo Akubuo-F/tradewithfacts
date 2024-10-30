@@ -83,8 +83,8 @@ async def mock_report(request: Request):
             change_in_open_interest=4706
         )
     ]
-    report: COTReport = COTReport(as_of="2024-10-22", valid_till="2024-11-01", records=records)
-    content: dict[str, Any] = {"message": report.to_dict()}
+    cot_report: COTReport = COTReport(as_of="2024-10-22", valid_till="2024-11-01", records=records)
+    content: dict[str, Any] = {"message": cot_report.to_dict()}
     status_code: int = 200
     return JSONResponse(content, status_code)
 
