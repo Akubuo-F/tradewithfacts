@@ -16,7 +16,7 @@ limiter = Limiter(key_func=get_remote_address)
 
 
 @cot.get("/")
-@limiter.limit("5/day")
+@limiter.limit("2/day")
 async def mock_report(request: Request):
     records: list[COTRecord] = [
         COTRecord(
