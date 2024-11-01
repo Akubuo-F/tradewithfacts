@@ -20,7 +20,7 @@ class COTRecord:
     ):
         """
         :param asset: A Futures contract reported in the COT report.
-        :param speculators:  A group of traders that have positions on an asset reported in the COT report.
+        :param speculators: A group of traders that have positions on an asset reported in the COT report.
         :param hedgers: A group of traders that have positions on an asset reported in the COT report
         :param open_interest: Number of contracts that are still active.
         :param change_in_open_interest: Change in open interest from the previous week.
