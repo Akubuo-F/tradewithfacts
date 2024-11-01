@@ -137,6 +137,10 @@ class TestAbstractCOTRecordAnalyser(unittest.TestCase):
         extremes: Reading = self.cot_record_analyser.analyse_extremes()
         print(f"Extremes = {extremes.name}")
 
+    def test_analyse_overall_score(self):
+        overall_score: float = self.cot_record_analyser.analyse_overall_score(self.mock_historical_record)
+        print(f"Overall score = {overall_score}")
+
 
 if __name__ == '__main__':
     unittest.main()
