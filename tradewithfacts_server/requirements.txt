@@ -1,3 +1,7 @@
 fastapi
 uvicorn
 slowapi
+pandas
+requests
+beautifulsoup4
+cot_reports
