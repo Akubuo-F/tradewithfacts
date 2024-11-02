@@ -6,9 +6,9 @@ class AppColor {
   static const Color darkThemeBackgroundColor = Color(0xFF121212);
   static const Color darkThemeOtherColor = Color(0xFF2C2C2C);
   static const Color lightThemePrimaryColor = Color(0xFFFFFFFF);
-  static const Color lightThemeSecondaryColor = Color(0xFF1976D2);
+  static const Color lightThemeSecondaryColor = Color(0xFF4CAF50);
   static const Color lightThemeBackgroundColor = Color(0xFFF5F5F5);
-  static const Color lightThemeOtherColor = Color(0xFFE0E0E0);
+  static const Color lightThemeOtherColor = Color(0xFFFFD700);
   static const Color white = Colors.white;
   static const Color white24 = Colors.white24;
   static const Color white70 = Colors.white70;
@@ -118,6 +118,21 @@ class AppAppBarTheme {
   );
 }
 
+class AppBottomNavigationTheme {
+  static BottomNavigationBarThemeData darkBottomNavigationTheme =
+      const BottomNavigationBarThemeData(
+    backgroundColor: AppColor.darkThemePrimaryColor,
+    selectedItemColor: AppColor.darkThemeSecondaryColor,
+    unselectedItemColor: AppColor.white70,
+  );
+  static BottomNavigationBarThemeData lightBottomNavigationTheme =
+      const BottomNavigationBarThemeData(
+    backgroundColor: AppColor.lightThemePrimaryColor,
+    selectedItemColor: AppColor.lightThemeSecondaryColor,
+    unselectedItemColor: AppColor.black,
+  );
+}
+
 class AppInputDecorationTheme {
   static InputDecorationTheme darkInputDecorationTheme = InputDecorationTheme(
     filled: true,
@@ -140,6 +155,8 @@ class AppInputDecorationTheme {
 }
 
 class AppTheme {
+  AppTheme._();
+
   static ThemeData darkTheme = ThemeData(
     colorScheme: AppColorScheme.darkColorScheme,
     scaffoldBackgroundColor: AppColor.darkThemeBackgroundColor,
@@ -149,6 +166,8 @@ class AppTheme {
     appBarTheme: AppAppBarTheme.darkAppBarTheme,
     inputDecorationTheme: AppInputDecorationTheme.darkInputDecorationTheme,
     iconTheme: AppIconTheme.darkIconTheme,
+    bottomNavigationBarTheme:
+        AppBottomNavigationTheme.darkBottomNavigationTheme,
     dividerColor: AppColor.white24,
   );
   static ThemeData lightTheme = ThemeData(
@@ -160,6 +179,8 @@ class AppTheme {
     appBarTheme: AppAppBarTheme.lightAppBarTheme,
     inputDecorationTheme: AppInputDecorationTheme.lightInputDecorationTheme,
     iconTheme: AppIconTheme.lightIconTheme,
+    bottomNavigationBarTheme:
+        AppBottomNavigationTheme.lightBottomNavigationTheme,
     dividerColor: AppColor.black54,
   );
 }
