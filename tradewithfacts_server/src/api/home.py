@@ -8,7 +8,7 @@ from src.api.cot import cot
 
 
 home = FastAPI()
-home.include_router(cot, prefix="/cot")
+home.include_router(cot, prefix="/cot_report")
 
 limiter = Limiter(key_func=get_remote_address)
 # noinspection PyUnresolvedReferences

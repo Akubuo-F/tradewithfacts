@@ -10,14 +10,17 @@ class AbstractCOTRecordAnalyser(ABC):
     extremes.
     """
 
-    def __init__(self, cot_record: COTRecord):
+    def __init__(self, cot_record: COTRecord | None = None):
         """
         :param cot_record: The COT record to be analysed.
         """
         self._cot_record = cot_record
 
+    def set_record_to_analyse(self, cot_record: COTRecord):
+        self._cot_record = cot_record
+
     @abstractmethod
-    def analyse_current_sentiment(self) -> Reading:
+    def analyse_changes_in_sentiment(self) -> Reading:
         """
         :return: A reading indicating bullish, bearish, or neutral sentiment.
         """
@@ -31,7 +34,7 @@ class AbstractCOTRecordAnalyser(ABC):
         ...
 
     @abstractmethod
-    def analyse_latest_sentiment_trend(self, historical_records: list[COTRecord]) -> Reading:
+    def analyse_sentiment_trend(self, historical_records: list[COTRecord]) -> Reading:
         """
         :param historical_records: A list of COT records representing historical data.
         :return: A reading indicating bullish, bearish, or neutral trend.
@@ -45,16 +48,16 @@ class AbstractCOTRecordAnalyser(ABC):
         """
         ...
     
-    def analyse_overall_score(self, historical_records: list[COTRecord]) -> float:
+    def analyse_overall_score(self, historical_records: list[COTRecord]) -> int:
         """
         Analyses the overall sentiment and trend to provide a general score ranging from -100% (extremely bearish) to
         100% (extremely bullish).
         :param historical_records: A list of COT records representing historical data.
         :return: A value representing the overall sentiment score.
         """
-        return sum([
-            self.analyse_current_sentiment().value * 0.4,
+        return int(round(sum([
+            self.analyse_changes_in_sentiment().value * 0.4,
             self.analyse_hedging_activity().value * 0.2,
-            self.analyse_latest_sentiment_trend(historical_records).value * 0.3,
+            self.analyse_sentiment_trend(historical_records).value * 0.3,
             self.analyse_extremes().value * 0.1
-        ]) * 100
+        ]) * 100, 1))
