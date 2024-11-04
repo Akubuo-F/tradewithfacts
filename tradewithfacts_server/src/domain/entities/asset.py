@@ -39,6 +39,9 @@ class Asset:
     def __eq__(self, other: "Asset") -> bool:
         return self.code == other.code
 
+    def __hash__(self) -> int:
+        return hash((self.code, self.name, self.asset_type))
+
 
 class ReportedAssets:
     """

@@ -9,15 +9,18 @@ class AbstractCOTReportDownloader(ABC):
     """
 
     @abstractmethod
-    def download(self) -> pd.DataFrame:
+    def download(self, years_to_download) -> list[pd.DataFrame]:
         """
-        :return: The downloaded COT report in a data frame.
+        :param years_to_download: The amount of years to download.
+        :return: The downloaded COT report in a data frames.
         """
         ...
 
     @abstractmethod
-    def store_locally(self, report: pd.DataFrame) -> None:
+    def store_locally(self, storage_details: dict, report: pd.DataFrame, years_count: int) -> None:
         """
+        :param storage_details: details about the storage.
         :param report: COT report as a data frame.
+        :param years_count: Years of report you are storing.
         :return: None
         """

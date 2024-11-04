@@ -1,17 +1,21 @@
 from src.analysers.base.abstract_cot_record_analyser import AbstractCOTRecordAnalyser
+from src.domain.entities.asset import ReportedAssets
 from src.domain.entities.cot.cot_record import COTRecord
 from src.domain.entities.reading import Reading
+from src.domain.repositories.cot.cot_report_downloader import COTReportDownloader
+from src.domain.repositories.cot.cot_repository import COTRepository
+from src.util.helper import Helper
 
 
 class COTRecordAnalyser(AbstractCOTRecordAnalyser):
 
-    def __init__(self, cot_record: COTRecord):
+    def __init__(self, cot_record: COTRecord | None = None):
         """
         :param cot_record: The COT record to be analysed.
         """
         super().__init__(cot_record)
 
-    def analyse_current_sentiment(self) -> Reading:
+    def analyse_changes_in_sentiment(self) -> Reading:
         """
         Analyses the current sentiment of speculators based on the percentage change in their net positions.
         :return: A reading indicating bullish, bearish, or neutral sentiment.
@@ -35,18 +39,14 @@ class COTRecordAnalyser(AbstractCOTRecordAnalyser):
             return Reading.bearish
         return Reading.neutral
 
-    def analyse_latest_sentiment_trend(self, historical_records: list[COTRecord]) -> Reading:
+    def analyse_sentiment_trend(self, historical_records: list[COTRecord]) -> Reading:
         """
         Analyses the latest sentiment trend of speculators' net positions over a specified period.
         :param historical_records: A list of COT records representing historical data.
         :return: A reading indicating bullish, bearish, or neutral trend.
-        :raises ValueError: If the length of the historical_records is not equal to the required period.
         """
-        period: int = 4
-        if len(historical_records) != period:
-            raise ValueError(f"Historical records should be of length 4 with recent record included.")
         recent_net_trend: int = sum(record.speculators.positions.percentage_net for record in historical_records)
-        average_net: float = recent_net_trend / period
+        average_net: float = recent_net_trend / len(historical_records)
         if average_net > recent_net_trend:
             return Reading.bullish
         elif average_net < recent_net_trend:
@@ -66,3 +66,25 @@ class COTRecordAnalyser(AbstractCOTRecordAnalyser):
         elif speculators_percentage_net < -threshold and hedgers_percentage_net > threshold:
             return Reading.bullish
         return Reading.neutral
+
+
+if __name__ == '__main__':
+    analyser = COTRecordAnalyser()
+    cot_repository = COTRepository(Helper.get_storage_details("cot_report"), COTReportDownloader())
+    latest_cot_report = cot_repository.fetch_latest_report(ReportedAssets.all)
+    print(f"Latest COT Report AS OF: {latest_cot_report.as_of}\n")
+    for record in latest_cot_report.records:
+        analyser.set_record_to_analyse(record)
+        historical_reports = cot_repository.fetch_historical_report(record.asset, 4)
+        overall_score: int = analyser.analyse_overall_score(historical_reports.records)
+        speculators = record.speculators
+        hedgers = record.hedgers
+        print(f"{record.asset.name} {record.asset.asset_type.value}")
+        print(f"changes_in_sentiment = {analyser.analyse_changes_in_sentiment().name}")
+        print(f"Hedging activity = {analyser.analyse_hedging_activity().name}")
+        print(f"Sentiment_trend = {analyser.analyse_sentiment_trend(historical_reports.records).name}")
+        print(f"Extremes = {analyser.analyse_extremes().name}")
+        print(f"Overall score = {overall_score}% {"Bullish" if overall_score > 0 else "Bearish"}")
+        print(f"Speculators = {speculators.to_dict()}, net = {speculators.positions.percentage_net}%, net_change = {speculators.positions.percentage_change_in_net}%")
+        print(f"Hedgers = {hedgers.to_dict()}, net = {hedgers.positions.percentage_net}%, net_change = {hedgers.positions.percentage_change_in_net}%")
+        print("\n")
