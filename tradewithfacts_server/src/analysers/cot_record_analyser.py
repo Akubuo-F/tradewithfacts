@@ -87,4 +87,5 @@ if __name__ == '__main__':
         print(f"Overall score = {overall_score}% {"Bullish" if overall_score > 0 else "Bearish"}")
         print(f"Speculators = {speculators.to_dict()}, net = {speculators.positions.percentage_net}%, net_change = {speculators.positions.percentage_change_in_net}%")
         print(f"Hedgers = {hedgers.to_dict()}, net = {hedgers.positions.percentage_net}%, net_change = {hedgers.positions.percentage_change_in_net}%")
+        print()
         print("\n")
